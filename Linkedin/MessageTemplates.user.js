@@ -11,7 +11,7 @@
 // @grant        none
 // ==/UserScript==
 
-// TODO: Add a "Save" button to save the current message template.
+// TODO: make templates customizables.
 
 (function() {
   'use strict';
