@@ -13,7 +13,7 @@
 // @grant        none
 // ==/UserScript==
 
-// TODO: make templates customizables.
+// TODO: make templates customizables using localStorage
 
 (function() {
   'use strict';
