@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linkedin Message Templates
 // @namespace    https://github.com/nathanredblur
-// @version      0.2
+// @version      0.3
 // @description  Paste a predefined message template into the message box.
 // @author       NathanRedblur
 // @license      MIT
