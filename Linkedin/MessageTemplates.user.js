@@ -21,11 +21,11 @@
   const responseTemplate = `
       <p>Hi [recruiterName],</p>
       <p><br></p>
-      <p>Thank you for reaching out with this awesome opportunity!</p>
+      <p>Thank you for reaching out to me with this fantastic opportunity!</p>
       <p><br></p>
-      <p>Please let me inform you that my current salary expectation is 120k&nbsp;$US  per year in a remote position, and I'm not interested to work in software development companies, just enterprises with his own product.</p>
+      <p>Please let me inform you that my current salary expectation is between 80k to 100k $US per year in a remote position, and I'm looking to work in non-outsourcing companies, to be able to show all my skills and experience.</p>
       <p><br></p>
-      <p>Let me know if your proposal fulfills my expectations, and I will be happy to discuss in detail this opportunity.</p>
+      <p>Let me know if your proposal fulfills my expectations, and I will be happy to discuss this opportunity in detail.</p>
       <p><br></p>
       <p>Thank you for your time and I wish you a wonderful day.</p>
   `
