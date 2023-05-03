@@ -5,6 +5,9 @@
 // @description  Paste a predefined message template into the message box.
 // @author       NathanRedblur
 // @license      MIT
+// @supportURL   https://github.com/nathanredblur/GreasyForkScripts
+// @updateURL    https://github.com/nathanredblur/GreasyForkScripts/raw/main/Linkedin/MessageTemplates.user.js
+// @downloadURL  https://github.com/nathanredblur/GreasyForkScripts/raw/main/Linkedin/MessageTemplates.user.js
 // @match        https://www.linkedin.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=linkedin.com
 // @grant        none
