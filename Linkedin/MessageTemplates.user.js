@@ -1,13 +1,10 @@
 // ==UserScript==
 // @name         Linkedin Message Templates
 // @namespace    https://github.com/nathanredblur
-// @version      0.3
+// @version      0.4
 // @description  Paste a predefined message template into the message box.
 // @author       NathanRedblur
 // @license      MIT
-// @supportURL   https://github.com/nathanredblur/GreasyForkScripts
-// @updateURL    https://github.com/nathanredblur/GreasyForkScripts/raw/main/Linkedin/MessageTemplates.user.js
-// @downloadURL  https://github.com/nathanredblur/GreasyForkScripts/raw/main/Linkedin/MessageTemplates.user.js
 // @match        https://www.linkedin.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=linkedin.com
 // @grant        none
@@ -47,14 +44,14 @@
 
   const createButton = ({name, container, action}) => {
       const html = `
-      <li class="conversations-quick-replies__reply">
-        <button class="conversations-quick-replies__reply-button artdeco-button artdeco-button--2 artdeco-button--secondary p0" type="button">
-          <span aria-hidden="true" class="ml2 mr3">${name}</span>
+      <div>
+        <button id="qrplButton" class="conversations-quick-replies__reply-button artdeco-button artdeco-button--2 artdeco-button--secondary p0" type="button">
+          <span class="ml2 mr3">${name}</span>
         </button>
-      </li>`
+      </div>`
 
       container.insertAdjacentHTML("beforeend", html)
-      const button = container.querySelector("li:last-child > .conversations-quick-replies__reply-button")
+      const button = container.querySelector("#qrplButton")
       button.addEventListener("click", () => {
           action(name)
       })
@@ -62,13 +59,15 @@
 
 
   const addTemplate = () => {
-      const qrList = document.querySelector(".conversations-quick-replies__container");
-      qrList.style.flexWrap = "wrap";
-      createButton({
-          name: "Recruiter",
-          container: qrList,
-          action: () => typeTemplate(responseTemplate),
-      })
+      const button = document.querySelector("#qrplButton");
+      if (!button) {
+          const qrList = document.querySelector(".msg-form__left-actions");
+          createButton({
+              name: "Recruiter",
+              container: qrList,
+              action: () => typeTemplate(responseTemplate),
+          })
+      }
   }
 
   const onUrlChange = () => {
@@ -86,5 +85,5 @@
       }
   }).observe(document, {subtree: true, childList: true});
 
-  onUrlChange();
+  setTimeout(onUrlChange, 2000);
 })();
