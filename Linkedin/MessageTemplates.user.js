@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linkedin Message Templates
 // @namespace    https://github.com/nathanredblur
-// @version      0.4
+// @version      0.3
 // @description  Paste a predefined message template into the message box.
 // @author       NathanRedblur
 // @license      MIT
@@ -15,78 +15,76 @@
 
 // TODO: make templates customizables using localStorage
 
-(function() {
-  'use strict';
+(function () {
+    'use strict';
 
-  const responseTemplate = `
+    const responseTemplate = `
       <p>Hi [recruiterName],</p>
       <p><br></p>
-      <p>Thank you for reaching out to me with this fantastic opportunity!</p>
+      <p>Thank you for reaching out with this awesome opportunity!</p>
       <p><br></p>
-      <p>Please let me inform you that my current salary expectation is between 80k to 100k $US per year in a remote position, and I'm looking to work in non-outsourcing companies, to be able to show all my skills and experience.</p>
+      <p>Please let me inform you that my current salary expectation is 120k&nbsp;$US  per year in a remote position, and I'm not interested to work in software development companies, just enterprises with his own product.</p>
       <p><br></p>
-      <p>Let me know if your proposal fulfills my expectations, and I will be happy to discuss this opportunity in detail.</p>
+      <p>Let me know if your proposal fulfills my expectations, and I will be happy to discuss in detail this opportunity.</p>
       <p><br></p>
       <p>Thank you for your time and I wish you a wonderful day.</p>
   `
 
-  const typeTemplate = (template) => {
-      const inputText = document.querySelector(".msg-form__contenteditable");
-      const recruiterName = document.querySelector(".msg-entity-lockup__entity-title").innerText
-      const text = template.replace("[recruiterName]", recruiterName);
-      inputText.innerHTML = text;
+    const typeTemplate = (template) => {
+        const inputText = document.querySelector(".msg-form__contenteditable");
+        const recruiterName = document.querySelector(".msg-entity-lockup__entity-title").innerText
+        const text = template.replace("[recruiterName]", recruiterName);
+        inputText.innerHTML = text;
 
-      setTimeout(function() {
-          inputText.focus();
-          inputText.dispatchEvent(new Event('input', {
-              bubbles: true,
-              cancelable: true,
-          }))
-      }, 0);
-  }
+        setTimeout(function () {
+            inputText.focus();
+            inputText.dispatchEvent(new Event('input', {
+                bubbles: true,
+                cancelable: true,
+            }))
+        }, 0);
+    }
 
-  const createButton = ({name, container, action}) => {
-      const html = `
-      <div>
-        <button id="qrplButton" class="conversations-quick-replies__reply-button artdeco-button artdeco-button--2 artdeco-button--secondary p0" type="button">
-          <span class="ml2 mr3">${name}</span>
+    const createButton = ({ name, container, action }) => {
+        const html = `
+      <li class="conversations-quick-replies__reply">
+        <button class="conversations-quick-replies__reply-button artdeco-button artdeco-button--2 artdeco-button--secondary p0" type="button">
+          <span aria-hidden="true" class="ml2 mr3">${name}</span>
         </button>
-      </div>`
+      </li>`
 
-      container.insertAdjacentHTML("beforeend", html)
-      const button = container.querySelector("#qrplButton")
-      button.addEventListener("click", () => {
-          action(name)
-      })
-  }
+        container.insertAdjacentHTML("beforeend", html)
+        const button = container.querySelector("li:last-child > .conversations-quick-replies__reply-button")
+        button.addEventListener("click", () => {
+            action(name)
+        })
+    }
 
 
-  const addTemplate = () => {
-      const button = document.querySelector("#qrplButton");
-      if (!button) {
-          const qrList = document.querySelector(".msg-form__left-actions");
-          createButton({
-              name: "Recruiter",
-              container: qrList,
-              action: () => typeTemplate(responseTemplate),
-          })
-      }
-  }
+    const addTemplate = () => {
+        const qrList = document.querySelector(".conversations-quick-replies__container");
+        qrList.style.flexWrap = "wrap";
+        createButton({
+            name: "Recruiter",
+            container: qrList,
+            action: () => typeTemplate(responseTemplate),
+        })
+    }
 
-  const onUrlChange = () => {
-      const isMessagePage = location.href.includes("/messaging/thread/")
-      if (isMessagePage) addTemplate()
-  }
+    const onUrlChange = () => {
+        const isMessagePage = location.href.includes("/messaging/thread/")
+        if (isMessagePage) addTemplate()
+    }
 
-  // init script
-  let lastUrl = location.href;
-  new MutationObserver(() => {
-      const url = location.href;
-      if (url !== lastUrl) {
-          lastUrl = url;
-          onUrlChange();
-      }
-  }).observe(document, {subtree: true, childList: true});
+    // init script
+    let lastUrl = location.href;
+    new MutationObserver(() => {
+        const url = location.href;
+        if (url !== lastUrl) {
+            lastUrl = url;
+            onUrlChange();
+        }
+    }).observe(document, { subtree: true, childList: true });
 
-  setTimeout(onUrlChange, 2000);
+    onUrlChange();
 })();
