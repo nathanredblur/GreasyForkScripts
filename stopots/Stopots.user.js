@@ -1,12 +1,15 @@
 // ==UserScript==
 // @name         WebSocket Stop Game Helper
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  Intercepta mensajes de WebSocket y ayuda a jugar Stop
-// @author       You
+// @author       NathanRedblur
 // @match        https://stopots.com/*
 // @grant        none
 // @run-at       document-start
+// @supportURL   https://github.com/nathanredblur/GreasyForkScripts
+// @updateURL    https://github.com/nathanredblur/GreasyForkScripts/raw/main/stopots/Stopots.user.js
+// @downloadURL  https://github.com/nathanredblur/GreasyForkScripts/raw/main/stopots/Stopots.user.js
 // ==/UserScript==
 
 (function() {
