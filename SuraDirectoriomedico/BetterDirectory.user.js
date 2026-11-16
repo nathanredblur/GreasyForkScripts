@@ -6,8 +6,8 @@
 // @author       NathanRedblur
 // @license      MIT
 // @supportURL   https://github.com/nathanredblur/GreasyForkScripts
-// @updateURL    https://github.com/nathanredblur/GreasyForkScripts/raw/main/Linkedin/MessageTemplates.user.js
-// @downloadURL  https://github.com/nathanredblur/GreasyForkScripts/raw/main/Linkedin/MessageTemplates.user.js
+// @updateURL    https://github.com/nathanredblur/GreasyForkScripts/raw/main/SuraDirectoriomedico/BetterDirectory.user.js
+// @downloadURL  https://github.com/nathanredblur/GreasyForkScripts/raw/main/SuraDirectoriomedico/BetterDirectory.user.js
 // @match        https://directoriomedico.segurossura.com.co/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=segurossura.com.co
 // @grant        none
