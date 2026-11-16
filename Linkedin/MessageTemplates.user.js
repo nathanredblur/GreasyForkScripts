@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Linkedin Message Templates
 // @namespace    https://github.com/nathanredblur
-// @version      0.3
+// @version      0.4
 // @description  Paste a predefined message template into the message box.
 // @author       NathanRedblur
 // @license      MIT
@@ -13,78 +13,58 @@
 // @grant        none
 // ==/UserScript==
 
-// TODO: make templates customizables using localStorage
-
 (function () {
     'use strict';
 
-    const responseTemplate = `
-      <p>Hi [recruiterName],</p>
-      <p><br></p>
-      <p>Thank you for reaching out with this awesome opportunity!</p>
-      <p><br></p>
-      <p>Please let me inform you that my current salary expectation is 120k&nbsp;$US  per year in a remote position, and I'm not interested to work in software development companies, just enterprises with his own product.</p>
-      <p><br></p>
-      <p>Let me know if your proposal fulfills my expectations, and I will be happy to discuss in detail this opportunity.</p>
-      <p><br></p>
-      <p>Thank you for your time and I wish you a wonderful day.</p>
-  `
+    const BUTTON_ATTR = 'data-message-template';
 
-    const typeTemplate = (template) => {
-        const inputText = document.querySelector(".msg-form__contenteditable");
-        const recruiterName = document.querySelector(".msg-entity-lockup__entity-title").innerText
-        const text = template.replace("[recruiterName]", recruiterName);
-        inputText.innerHTML = text;
+    const templates = {
+        Recruiter: `Hi [recruiterName],
 
-        setTimeout(function () {
-            inputText.focus();
-            inputText.dispatchEvent(new Event('input', {
-                bubbles: true,
-                cancelable: true,
-            }))
-        }, 0);
-    }
+Thank you for reaching out with this awesome opportunity!
 
-    const createButton = ({ name, container, action }) => {
-        const html = `
-      <li class="conversations-quick-replies__reply">
-        <button class="conversations-quick-replies__reply-button artdeco-button artdeco-button--2 artdeco-button--secondary p0" type="button">
-          <span aria-hidden="true" class="ml2 mr3">${name}</span>
-        </button>
-      </li>`
+Please let me inform you that my current salary expectation is 120k $US per year in a remote position, and I'm not interested to work in software development companies, just enterprises with his own product.
 
-        container.insertAdjacentHTML("beforeend", html)
-        const button = container.querySelector("li:last-child > .conversations-quick-replies__reply-button")
-        button.addEventListener("click", () => {
-            action(name)
-        })
-    }
+Let me know if your proposal fulfills my expectations, and I will be happy to discuss in detail this opportunity.
 
+Thank you for your time and I wish you a wonderful day.`,
+    };
 
-    const addTemplate = () => {
-        const qrList = document.querySelector(".conversations-quick-replies__container");
-        qrList.style.flexWrap = "wrap";
-        createButton({
-            name: "Recruiter",
-            container: qrList,
-            action: () => typeTemplate(responseTemplate),
-        })
-    }
+    const getRecruiterFirstName = () => {
+        const title = document.querySelector('.msg-entity-lockup__entity-title');
+        return title ? title.innerText.trim().split(/\s+/)[0] : '';
+    };
 
-    const onUrlChange = () => {
-        const isMessagePage = location.href.includes("/messaging/thread/")
-        if (isMessagePage) addTemplate()
-    }
+    // LinkedIn's editor ignores direct innerHTML changes; execCommand goes through
+    // the native input pipeline so the send button and draft state update.
+    const typeTemplate = (form, template) => {
+        const editor = form.querySelector('.msg-form__contenteditable');
+        if (!editor) return;
+        editor.focus();
+        document.execCommand('selectAll');
+        document.execCommand('insertText', false, template.replace('[recruiterName]', getRecruiterFirstName()));
+    };
 
-    // init script
-    let lastUrl = location.href;
-    new MutationObserver(() => {
-        const url = location.href;
-        if (url !== lastUrl) {
-            lastUrl = url;
-            onUrlChange();
+    const addButtons = (form) => {
+        const actions = form.querySelector('.msg-form__left-actions');
+        if (!actions || actions.querySelector(`[${BUTTON_ATTR}]`)) return;
+
+        for (const [name, template] of Object.entries(templates)) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = name;
+            button.setAttribute(BUTTON_ATTR, name);
+            button.className = 'artdeco-button artdeco-button--1 artdeco-button--secondary ml1';
+            button.addEventListener('click', () => typeTemplate(form, template));
+            actions.append(button);
         }
-    }).observe(document, { subtree: true, childList: true });
+    };
 
-    onUrlChange();
+    const scan = () => {
+        if (!location.pathname.startsWith('/messaging/')) return;
+        document.querySelectorAll('form.msg-form').forEach(addButtons);
+    };
+
+    new MutationObserver(scan).observe(document.body, { subtree: true, childList: true });
+    scan();
 })();
