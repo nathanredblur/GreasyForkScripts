@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Fix vimium-c next and prev
 // @namespace    http://tampermonkey.net/
-// @version      2025-11-09
-// @description  This fixes the ]] and [[ shortcuts for next page in aliexpres pages
+// @version      2026-11-16
+// @description  This fixes the ]] and [[ shortcuts for next page in aliexpress pages
 // @author       @NathaRedblur
-// @match        https://es.aliexpress.com/*
+// @match        https://*.aliexpress.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=aliexpress.com
 // @grant        none
 // @supportURL   https://github.com/nathanredblur/GreasyForkScripts
@@ -15,25 +15,22 @@
 (function() {
     'use strict';
 
-    function updatePagination() {
-        // Find prev button
-        const prevButton = document.querySelector('.comet-pagination-prev button');
-        if (prevButton) {
-            prevButton.textContent = '<';
-        }
+    // Vimium-C's [[ and ]] match links by text; AliExpress renders icon-only buttons.
+    const labels = {
+        '.comet-pagination-prev button': '<',
+        '.comet-pagination-next button': '>',
+    };
 
-        // Find next button
-        const nextButton = document.querySelector('.comet-pagination-next button');
-        if (nextButton) {
-            nextButton.textContent = '>';
+    function updatePagination() {
+        for (const [selector, label] of Object.entries(labels)) {
+            const button = document.querySelector(selector);
+            if (button && button.textContent !== label) {
+                button.textContent = label;
+            }
         }
     }
 
-    // Run on load
+    // Pagination is lazy-loaded on scroll and re-rendered on page change.
+    new MutationObserver(updatePagination).observe(document.body, { childList: true, subtree: true });
     updatePagination();
-
-    // Run again after a short delay for dynamic content
-    setTimeout(updatePagination, 1000);
-    setTimeout(updatePagination, 3000);
-
 })();
